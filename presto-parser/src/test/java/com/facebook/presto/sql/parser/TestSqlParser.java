@@ -140,6 +140,20 @@ public class TestSqlParser
         assertGenericLiteral("foo");
     }
 
+    @Test
+    public void testStringLiteral()
+            throws Exception
+    {
+        assertExpression("'blah'", new StringLiteral("blah"));
+    }
+
+    @Test
+    public void testBinaryStringLiteral()
+            throws Exception
+    {
+        assertExpression("X'12 34'  '20 56'", new StringLiteral("123abc"));
+    }
+
     public static void assertGenericLiteral(String type)
     {
         assertExpression(type + " 'abc'", new GenericLiteral(type, "abc"));

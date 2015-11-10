@@ -515,8 +515,28 @@ SLASH: '/';
 PERCENT: '%';
 CONCAT: '||';
 
-STRING
+STRING : REGULAR_STRING
+       | BINARY_STRING
+       ;
+
+REGULAR_STRING
     : '\'' ( ~'\'' | '\'\'' )* '\''
+    ;
+
+BINARY_STRING
+    :  'X' WS* BINARY_STRING_SEGMENT (SEPARATOR BINARY_STRING_SEGMENT)*
+    ;
+fragment BINARY_STRING_SEGMENT
+    :  '\'' WS* HEXIT WS* HEXIT WS* (HEXIT WS* HEXIT WS*)* '\''
+    ;
+fragment SEPARATOR
+    : SIMPLE_COMMENT
+    | BRACKETED_COMMENT
+    | WS
+    ;
+
+fragment HEXIT
+    : [0-9]
     ;
 
 INTEGER_VALUE
