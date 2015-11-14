@@ -47,7 +47,7 @@ statement
     | CREATE (OR REPLACE)? VIEW qualifiedName AS query                 #createView
     | DROP VIEW (IF EXISTS)? qualifiedName                             #dropView
     | EXPLAIN ('(' explainOption (',' explainOption)* ')')? statement  #explain
-    | SHOW TABLES ((FROM | IN) qualifiedName)? (LIKE pattern=STRING)?  #showTables
+    | SHOW TABLES ((FROM | IN) qualifiedName)? (LIKE pattern=string)?  #showTables
     | SHOW SCHEMAS ((FROM | IN) identifier)?                           #showSchemas
     | SHOW CATALOGS                                                    #showCatalogs
     | SHOW COLUMNS (FROM | IN) qualifiedName                           #showColumns
@@ -221,10 +221,11 @@ valueExpression
 primaryExpression
     : NULL                                                                           #nullLiteral
     | interval                                                                       #intervalLiteral
-    | identifier STRING                                                              #typeConstructor
+    | identifier string                                                              #typeConstructor
     | number                                                                         #numericLiteral
     | booleanValue                                                                   #booleanLiteral
-    | STRING                                                                         #stringLiteral
+    | string                                                                         #stringLiteral
+    | binaryString                                                                   #binaryStringLiteral
     | POSITION '(' valueExpression IN valueExpression ')'                            #position
     | '(' expression (',' expression)+ ')'                                           #rowConstructor
     | ROW '(' expression (',' expression)* ')'                                       #rowConstructor
@@ -254,7 +255,7 @@ primaryExpression
 
 timeZoneSpecifier
     : TIME ZONE interval  #timeZoneInterval
-    | TIME ZONE STRING    #timeZoneString
+    | TIME ZONE string    #timeZoneString
     ;
 
 comparisonOperator
@@ -266,7 +267,7 @@ booleanValue
     ;
 
 interval
-    : INTERVAL sign=(PLUS | MINUS)? STRING from=intervalField (TO to=intervalField)?
+    : INTERVAL sign=(PLUS | MINUS)? string from=intervalField (TO to=intervalField)?
     ;
 
 intervalField
@@ -354,6 +355,7 @@ nonReserved
     | normalForm
     | POSITION
     | NO | DATA
+    | 'X'
     ;
 
 normalForm
@@ -515,8 +517,29 @@ SLASH: '/';
 PERCENT: '%';
 CONCAT: '||';
 
-STRING
+BINARY_STRING_SEGMENT
+    :  '\'' WS* HEXIT WS* HEXIT WS* (HEXIT WS* HEXIT WS*)* '\''
+    ;
+
+REGULAR_STRING
     : '\'' ( ~'\'' | '\'\'' )* '\''
+    ;
+
+string
+    : REGULAR_STRING
+    | BINARY_STRING_SEGMENT
+    ;
+
+// we use a non-terminal to represent binaryString so that
+// we can automatically skip the WS and SEPARATOR (which is WS and comments)
+binaryString
+    :  'X' BINARY_STRING_SEGMENT+
+    ;
+// explicit call out of WS is necessary because we don't allow '01 /*some comment */ 04 af '
+
+
+fragment HEXIT
+    : [0-9A-F]
     ;
 
 INTEGER_VALUE

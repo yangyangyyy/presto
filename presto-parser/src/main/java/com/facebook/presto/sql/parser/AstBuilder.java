@@ -759,7 +759,7 @@ class AstBuilder
     @Override
     public Node visitTimeZoneString(SqlBaseParser.TimeZoneStringContext context)
     {
-        return new StringLiteral(unquote(context.STRING().getText()));
+        return new StringLiteral(unquote(context.string().getText()));
     }
 
     // ********************* primary expressions **********************
@@ -999,14 +999,14 @@ class AstBuilder
     @Override
     public Node visitStringLiteral(SqlBaseParser.StringLiteralContext context)
     {
-        return new StringLiteral(unquote(context.STRING().getText()));
+        return new StringLiteral(unquote(context.string().getText()));
     }
 
     @Override
     public Node visitTypeConstructor(SqlBaseParser.TypeConstructorContext context)
     {
         String type = context.identifier().getText();
-        String value = unquote(context.STRING().getText());
+        String value = unquote(context.string().getText());
 
         if (type.equalsIgnoreCase("time")) {
             return new TimeLiteral(value);
@@ -1040,7 +1040,7 @@ class AstBuilder
     public Node visitInterval(SqlBaseParser.IntervalContext context)
     {
         return new IntervalLiteral(
-                unquote(context.STRING().getText()),
+                unquote(context.string().getText()),
                 Optional.ofNullable(context.sign)
                         .map(AstBuilder::getIntervalSign)
                         .orElse(IntervalLiteral.Sign.POSITIVE),

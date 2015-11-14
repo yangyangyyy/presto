@@ -81,6 +81,11 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.TokenStream;
+import org.antlr.v4.runtime.atn.PredictionMode;
 import org.testng.annotations.Test;
 
 import java.util.Optional;
@@ -138,6 +143,42 @@ public class TestSqlParser
         assertGenericLiteral("BOOLEAN");
         assertGenericLiteral("DATE");
         assertGenericLiteral("foo");
+    }
+
+    @Test
+    public void testStringLiteral()
+            throws Exception
+    {
+        assertExpression("'blah'", new StringLiteral("blah"));
+    }
+
+    public Node compile(String expression)
+    {
+        try {
+            //lexer splits input into tokens
+            ANTLRInputStream input = new ANTLRInputStream(expression);
+            TokenStream tokens = new CommonTokenStream(new SqlBaseLexer(new CaseInsensitiveStream(input)));
+            System.err.println("tokens done" + tokens.toString());
+
+            //parser generates abstract syntax tree
+            SqlBaseParser parser = new SqlBaseParser(tokens);
+            parser.getInterpreter().setPredictionMode(PredictionMode.SLL);
+            SqlBaseParser.SingleExpressionContext ret = parser.singleExpression();
+
+            System.out.println(ret.toStringTree(parser));
+
+            return null;
+
+        } catch (RecognitionException e) {
+            throw new IllegalStateException("Recognition exception is never thrown, only declared.");
+        }
+    }
+    @Test
+    public void testBinaryStringLiteral()
+            throws Exception
+    {
+//        compile("#YY");
+        assertExpression("X ' ab 01'  /* asdf */ 'cd ef'", new StringLiteral("123abc"));
     }
 
     public static void assertGenericLiteral(String type)

@@ -101,6 +101,7 @@ public class SqlParser
                 tree = parseFunction.apply(parser);
             }
 
+            System.out.println(tree.toStringTree(parser));
             return new AstBuilder().visit(tree);
         }
         catch (StackOverflowError e) {
