@@ -23,6 +23,7 @@ import com.facebook.presto.sql.tree.ArithmeticBinaryExpression;
 import com.facebook.presto.sql.tree.ArithmeticUnaryExpression;
 import com.facebook.presto.sql.tree.ArrayConstructor;
 import com.facebook.presto.sql.tree.BetweenPredicate;
+import com.facebook.presto.sql.tree.BinaryStringLiteral;
 import com.facebook.presto.sql.tree.BooleanLiteral;
 import com.facebook.presto.sql.tree.Cast;
 import com.facebook.presto.sql.tree.CoalesceExpression;
@@ -1000,6 +1001,12 @@ class AstBuilder
     public Node visitStringLiteral(SqlBaseParser.StringLiteralContext context)
     {
         return new StringLiteral(unquote(context.STRING().getText()));
+    }
+
+    @Override
+    public Node visitBinaryStringLiteral(SqlBaseParser.BinaryStringLiteralContext context)
+    {
+        return new BinaryStringLiteral(unquote(context.BINARY_STRING().getText()));
     }
 
     @Override
