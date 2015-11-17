@@ -13,15 +13,19 @@
  */
 package com.facebook.presto.sql.tree.treeutil;
 
+import com.facebook.presto.spi.PrestoException;
 import io.airlift.slice.Slice;
 import io.airlift.slice.Slices;
-import com.facebook.presto.spi.PrestoException;
-import static com.facebook.presto.spi.StandardErrorCode.*;
+
+import static com.facebook.presto.spi.StandardErrorCode.INVALID_FUNCTION_ARGUMENT;
 /**
  * Created by yyy on 11/17/15.
  */
-public class BinaryStringLiteralUtil
+public class
+BinaryStringLiteralUtil
 {
+    private BinaryStringLiteralUtil(){}
+
     public static Slice fromHexVarchar(Slice slice)
     {
         if (slice.length() % 2 != 0) {

@@ -14,19 +14,15 @@
 package com.facebook.presto.operator.scalar;
 
 import com.facebook.presto.operator.Description;
-import com.facebook.presto.spi.PrestoException;
 import com.facebook.presto.spi.type.StandardTypes;
-import com.facebook.presto.sql.tree.BinaryStringLiteral;
+import com.facebook.presto.sql.tree.treeutil.BinaryStringLiteralUtil;
 import com.facebook.presto.type.SqlType;
 import com.google.common.hash.Hashing;
 import com.google.common.io.BaseEncoding;
 import io.airlift.slice.Slice;
 import io.airlift.slice.Slices;
-import com.facebook.presto.sql.tree.treeutil.BinaryStringLiteralUtil;
 
 import java.util.Base64;
-
-import static com.facebook.presto.spi.StandardErrorCode.INVALID_FUNCTION_ARGUMENT;
 
 public final class VarbinaryFunctions
 {
@@ -135,8 +131,6 @@ public final class VarbinaryFunctions
     {
         return Slices.wrappedBuffer(Hashing.sha512().hashBytes(slice.getBytes()).asBytes());
     }
-
-
 
     @Description("decode hex encoded binary data")
     @ScalarFunction("from_hex")

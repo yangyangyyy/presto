@@ -20,6 +20,7 @@ import com.facebook.presto.spi.PrestoException;
 import com.facebook.presto.spi.RecordCursor;
 import com.facebook.presto.spi.type.SqlTimestampWithTimeZone;
 import com.facebook.presto.spi.type.Type;
+import com.facebook.presto.spi.type.VarbinaryType;
 import com.facebook.presto.sql.parser.SqlParser;
 import com.facebook.presto.sql.planner.ExpressionInterpreter;
 import com.facebook.presto.sql.planner.Symbol;
@@ -71,6 +72,7 @@ public class TestExpressionInterpreter
     private static final Map<Symbol, Type> SYMBOL_TYPES = ImmutableMap.<Symbol, Type>builder()
             .put(new Symbol("bound_long"), BIGINT)
             .put(new Symbol("bound_string"), VARCHAR)
+            .put(new Symbol("bound_binary_string"), VarbinaryType.VARBINARY)
             .put(new Symbol("bound_double"), DOUBLE)
             .put(new Symbol("bound_boolean"), BOOLEAN)
             .put(new Symbol("bound_date"), DATE)
@@ -82,6 +84,7 @@ public class TestExpressionInterpreter
             .put(new Symbol("unbound_long"), BIGINT)
             .put(new Symbol("unbound_long2"), BIGINT)
             .put(new Symbol("unbound_string"), VARCHAR)
+            .put(new Symbol("unbound_binary_string"), VarbinaryType.VARBINARY)
             .put(new Symbol("unbound_double"), DOUBLE)
             .put(new Symbol("unbound_boolean"), BOOLEAN)
             .put(new Symbol("unbound_date"), DATE)

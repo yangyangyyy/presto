@@ -13,12 +13,12 @@
  */
 package com.facebook.presto.sql.tree;
 
+import com.facebook.presto.sql.tree.treeutil.BinaryStringLiteralUtil;
 import io.airlift.slice.Slice;
 import io.airlift.slice.Slices;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
-import com.facebook.presto.sql.tree.treeutil.BinaryStringLiteralUtil;
 
 public class BinaryStringLiteral
         extends Literal
