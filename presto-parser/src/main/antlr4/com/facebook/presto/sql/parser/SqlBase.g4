@@ -225,7 +225,7 @@ primaryExpression
     | number                                                                         #numericLiteral
     | booleanValue                                                                   #booleanLiteral
     | STRING                                                                         #stringLiteral
-    | BINARY_STRING                                                                  #binaryStringLiteral
+    | BINARY_LITERAL                                                                 #binaryLiteral
     | POSITION '(' valueExpression IN valueExpression ')'                            #position
     | '(' expression (',' expression)+ ')'                                           #rowConstructor
     | ROW '(' expression (',' expression)* ')'                                       #rowConstructor
@@ -520,7 +520,7 @@ STRING
     : '\'' ( ~'\'' | '\'\'' )* '\''
     ;
 
-BINARY_STRING
+BINARY_LITERAL
     :  'X' WS* '\'' WS* HEXIT WS* HEXIT WS* (HEXIT WS* HEXIT WS*)* '\''
     ;
 

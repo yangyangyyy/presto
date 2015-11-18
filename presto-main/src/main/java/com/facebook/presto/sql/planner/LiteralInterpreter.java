@@ -24,7 +24,7 @@ import com.facebook.presto.spi.type.Type;
 import com.facebook.presto.sql.analyzer.SemanticException;
 import com.facebook.presto.sql.tree.ArithmeticUnaryExpression;
 import com.facebook.presto.sql.tree.AstVisitor;
-import com.facebook.presto.sql.tree.BinaryStringLiteral;
+import com.facebook.presto.sql.tree.BinaryLiteral;
 import com.facebook.presto.sql.tree.BooleanLiteral;
 import com.facebook.presto.sql.tree.Cast;
 import com.facebook.presto.sql.tree.DoubleLiteral;
@@ -213,7 +213,7 @@ public final class LiteralInterpreter
         }
 
         @Override
-        protected Slice visitBinaryStringLiteral(BinaryStringLiteral node, ConnectorSession session)
+        protected Slice visitBinaryLiteral(BinaryLiteral node, ConnectorSession session)
         {
             return node.getSlice();
         }

@@ -17,7 +17,7 @@ import com.facebook.presto.spi.block.Block;
 import com.facebook.presto.spi.block.BlockBuilder;
 import com.facebook.presto.spi.block.BlockBuilderStatus;
 import com.facebook.presto.spi.type.Type;
-import com.facebook.presto.sql.tree.BinaryStringLiteral;
+import com.facebook.presto.sql.tree.BinaryLiteral;
 import com.facebook.presto.testing.RunLengthEncodedBlock;
 import com.facebook.presto.type.ArrayType;
 
@@ -100,7 +100,7 @@ public final class BlockAssertions
         return builder.build();
     }
 
-    public static Block createBinaryStringsBlock(String ...values) {
+    public static Block createBinaryLiteralsBlock(String ...values) {
         requireNonNull(values, "varargs 'values' is null");
 
         BlockBuilder builder = VARBINARY.createBlockBuilder(new BlockBuilderStatus(), 100);
@@ -110,7 +110,7 @@ public final class BlockAssertions
                 builder.appendNull();
             }
             else {
-                VARBINARY.writeSlice(builder, new BinaryStringLiteral(value).getSlice());
+                VARBINARY.writeSlice(builder, new BinaryLiteral(value).getSlice());
             }
         }
 

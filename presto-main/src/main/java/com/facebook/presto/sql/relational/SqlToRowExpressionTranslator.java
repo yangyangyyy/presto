@@ -27,7 +27,7 @@ import com.facebook.presto.sql.tree.ArithmeticUnaryExpression;
 import com.facebook.presto.sql.tree.ArrayConstructor;
 import com.facebook.presto.sql.tree.AstVisitor;
 import com.facebook.presto.sql.tree.BetweenPredicate;
-import com.facebook.presto.sql.tree.BinaryStringLiteral;
+import com.facebook.presto.sql.tree.BinaryLiteral;
 import com.facebook.presto.sql.tree.BooleanLiteral;
 import com.facebook.presto.sql.tree.Cast;
 import com.facebook.presto.sql.tree.CoalesceExpression;
@@ -188,7 +188,7 @@ public final class SqlToRowExpressionTranslator
         }
 
         @Override
-        protected RowExpression visitBinaryStringLiteral(BinaryStringLiteral node, Void context) {
+        protected RowExpression visitBinaryLiteral(BinaryLiteral node, Void context) {
             return constant(node.getSlice(), VARBINARY);
         }
 

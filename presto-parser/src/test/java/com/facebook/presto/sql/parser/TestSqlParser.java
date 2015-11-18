@@ -19,7 +19,7 @@ import com.facebook.presto.sql.tree.Approximate;
 import com.facebook.presto.sql.tree.ArithmeticBinaryExpression;
 import com.facebook.presto.sql.tree.ArrayConstructor;
 import com.facebook.presto.sql.tree.BetweenPredicate;
-import com.facebook.presto.sql.tree.BinaryStringLiteral;
+import com.facebook.presto.sql.tree.BinaryLiteral;
 import com.facebook.presto.sql.tree.BooleanLiteral;
 import com.facebook.presto.sql.tree.Cast;
 import com.facebook.presto.sql.tree.ComparisonExpression;
@@ -142,10 +142,10 @@ public class TestSqlParser
     }
 
     @Test
-    public void testBinaryStringLiteral()
+    public void testBinaryLiteral()
         throws Exception
     {
-        assertExpression("x 'a  b'", new BinaryStringLiteral("ab"));
+        assertExpression("x 'a  b'", new BinaryLiteral("ab"));
     }
 
     public static void assertGenericLiteral(String type)

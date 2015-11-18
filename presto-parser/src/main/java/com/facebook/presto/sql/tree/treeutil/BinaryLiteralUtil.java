@@ -22,9 +22,9 @@ import static com.facebook.presto.spi.StandardErrorCode.INVALID_FUNCTION_ARGUMEN
  * Created by yyy on 11/17/15.
  */
 public class
-BinaryStringLiteralUtil
+BinaryLiteralUtil
 {
-    private BinaryStringLiteralUtil(){}
+    private BinaryLiteralUtil(){}
 
     public static Slice fromHexVarchar(Slice slice)
     {

@@ -15,7 +15,7 @@ package com.facebook.presto.operator.scalar;
 
 import com.facebook.presto.operator.Description;
 import com.facebook.presto.spi.type.StandardTypes;
-import com.facebook.presto.sql.tree.treeutil.BinaryStringLiteralUtil;
+import com.facebook.presto.sql.tree.treeutil.BinaryLiteralUtil;
 import com.facebook.presto.type.SqlType;
 import com.google.common.hash.Hashing;
 import com.google.common.io.BaseEncoding;
@@ -97,7 +97,7 @@ public final class VarbinaryFunctions
     @SqlType(StandardTypes.VARBINARY)
     public static Slice fromHexVarchar(@SqlType(StandardTypes.VARCHAR) Slice slice)
     {
-        return BinaryStringLiteralUtil.fromHexVarchar(slice);
+        return BinaryLiteralUtil.fromHexVarchar(slice);
     }
 
     @Description("compute md5 hash")

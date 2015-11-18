@@ -13,27 +13,27 @@
  */
 package com.facebook.presto.sql.tree;
 
-import com.facebook.presto.sql.tree.treeutil.BinaryStringLiteralUtil;
+import com.facebook.presto.sql.tree.treeutil.BinaryLiteralUtil;
 import io.airlift.slice.Slice;
 import io.airlift.slice.Slices;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
 
-public class BinaryStringLiteral
+public class BinaryLiteral
         extends Literal
 {
     private final String value;
     private final Slice slice;
 
-    public BinaryStringLiteral(String value)
+    public BinaryLiteral(String value)
     {
         requireNonNull(value, "value is null");
         this.value = value.replaceAll("[^a-fA-F0-9]", "");
-        this.slice = BinaryStringLiteralUtil.fromHexVarchar(Slices.wrappedBuffer(this.value.getBytes(UTF_8)));
+        this.slice = BinaryLiteralUtil.fromHexVarchar(Slices.wrappedBuffer(this.value.getBytes(UTF_8)));
     }
 
-    public String getValue()
+    public String toHexString()
     {
         return value;
     }
@@ -46,7 +46,7 @@ public class BinaryStringLiteral
     @Override
     public <R, C> R accept(AstVisitor<R, C> visitor, C context)
     {
-        return visitor.visitBinaryStringLiteral(this, context);
+        return visitor.visitBinaryLiteral(this, context);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class BinaryStringLiteral
             return false;
         }
 
-        BinaryStringLiteral that = (BinaryStringLiteral) o;
+        BinaryLiteral that = (BinaryLiteral) o;
 
         if (!value.equals(that.value)) {
             return false;
