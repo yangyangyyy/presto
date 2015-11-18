@@ -156,7 +156,7 @@ public final class FunctionAssertions
             .put(new Symbol("bound_pattern"), 5)
             .put(new Symbol("bound_null_string"), 6)
             .put(new Symbol("bound_timestamp_with_timezone"), 7)
-            .put(new Symbol("bound_binary_string"), 8)
+            .put(new Symbol("bound_binary_literal"), 8)
             .build();
 
     private static final Map<Symbol, Type> SYMBOL_TYPES = ImmutableMap.<Symbol, Type>builder()
@@ -168,7 +168,7 @@ public final class FunctionAssertions
             .put(new Symbol("bound_pattern"), VARCHAR)
             .put(new Symbol("bound_null_string"), VARCHAR)
             .put(new Symbol("bound_timestamp_with_timezone"), TIMESTAMP_WITH_TIME_ZONE)
-            .put(new Symbol("bound_binary_string"), VARBINARY)
+            .put(new Symbol("bound_binary_literal"), VARBINARY)
             .build();
 
     private static final PageSourceProvider PAGE_SOURCE_PROVIDER = new TestPageSourceProvider();
