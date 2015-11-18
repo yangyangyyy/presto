@@ -13,11 +13,9 @@
  */
 package com.facebook.presto.sql.tree.treeutil;
 
-import com.facebook.presto.spi.PrestoException;
+import com.facebook.presto.sql.parser.ParsingException;
 import io.airlift.slice.Slice;
 import io.airlift.slice.Slices;
-
-import static com.facebook.presto.spi.StandardErrorCode.INVALID_FUNCTION_ARGUMENT;
 /**
  * Created by yyy on 11/17/15.
  */
@@ -29,7 +27,7 @@ BinaryLiteralUtil
     public static Slice fromHexVarchar(Slice slice)
     {
         if (slice.length() % 2 != 0) {
-            throw new PrestoException(INVALID_FUNCTION_ARGUMENT, "invalid input length " + slice.length());
+            throw new ParsingException("invalid input length " + slice.length());
         }
 
         byte[] result = new byte[slice.length() / 2];
@@ -50,6 +48,6 @@ BinaryLiteralUtil
         else if (b >= 'A' && b <= 'F') {
             return b - 'A' + 10;
         }
-        throw new PrestoException(INVALID_FUNCTION_ARGUMENT, "invalid hex character: " + (char) b);
+        throw new ParsingException("invalid hex character: " + (char) b);
     }
 }
