@@ -38,6 +38,14 @@ public class TestStatementSplitter
     }
 
     @Test
+    public void testSplitterIncompleteWithBinString()
+    {
+        StatementSplitter splitter = new StatementSplitter(" select concat(x, X '0a 0b 12 ' FROM foo  ");
+        assertEquals(splitter.getCompleteStatements(), ImmutableList.of());
+        assertEquals(splitter.getPartialStatement(), "select concat(x, X '0a 0b 12 ' FROM foo");
+    }
+
+    @Test
     public void testSplitterEmptyInput()
     {
         StatementSplitter splitter = new StatementSplitter("");
