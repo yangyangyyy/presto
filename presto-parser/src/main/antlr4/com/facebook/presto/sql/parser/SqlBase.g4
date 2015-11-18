@@ -225,6 +225,7 @@ primaryExpression
     | number                                                                         #numericLiteral
     | booleanValue                                                                   #booleanLiteral
     | STRING                                                                         #stringLiteral
+    | BINARY_STRING                                                                  #binaryStringLiteral
     | POSITION '(' valueExpression IN valueExpression ')'                            #position
     | '(' expression (',' expression)+ ')'                                           #rowConstructor
     | ROW '(' expression (',' expression)* ')'                                       #rowConstructor
@@ -517,6 +518,14 @@ CONCAT: '||';
 
 STRING
     : '\'' ( ~'\'' | '\'\'' )* '\''
+    ;
+
+BINARY_STRING
+    :  'X' WS* '\'' WS* HEXIT WS* HEXIT WS* (HEXIT WS* HEXIT WS*)* '\''
+    ;
+
+fragment HEXIT
+    : [0-9A-F]
     ;
 
 INTEGER_VALUE
