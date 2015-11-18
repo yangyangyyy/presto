@@ -145,7 +145,6 @@ public class TestSqlParser
     public void testBinaryStringLiteral()
         throws Exception
     {
-        assertExpression("bound_string", new BinaryStringLiteral("ab"));
         assertExpression("x 'a  b'", new BinaryStringLiteral("ab"));
     }
 
