@@ -20,10 +20,12 @@ import com.facebook.presto.spi.PrestoException;
 import com.facebook.presto.spi.RecordCursor;
 import com.facebook.presto.spi.type.SqlTimestampWithTimeZone;
 import com.facebook.presto.spi.type.Type;
+import com.facebook.presto.spi.type.VarbinaryType;
 import com.facebook.presto.sql.parser.SqlParser;
 import com.facebook.presto.sql.planner.ExpressionInterpreter;
 import com.facebook.presto.sql.planner.Symbol;
 import com.facebook.presto.sql.planner.SymbolResolver;
+import com.facebook.presto.sql.tree.BinaryLiteral;
 import com.facebook.presto.sql.tree.Expression;
 import com.facebook.presto.sql.tree.ExpressionRewriter;
 import com.facebook.presto.sql.tree.ExpressionTreeRewriter;
@@ -71,6 +73,7 @@ public class TestExpressionInterpreter
     private static final Map<Symbol, Type> SYMBOL_TYPES = ImmutableMap.<Symbol, Type>builder()
             .put(new Symbol("bound_long"), BIGINT)
             .put(new Symbol("bound_string"), VARCHAR)
+            .put(new Symbol("bound_binary_literal"), VarbinaryType.VARBINARY)
             .put(new Symbol("bound_double"), DOUBLE)
             .put(new Symbol("bound_boolean"), BOOLEAN)
             .put(new Symbol("bound_date"), DATE)
@@ -82,6 +85,7 @@ public class TestExpressionInterpreter
             .put(new Symbol("unbound_long"), BIGINT)
             .put(new Symbol("unbound_long2"), BIGINT)
             .put(new Symbol("unbound_string"), VARCHAR)
+            .put(new Symbol("unbound_binary_literal"), VarbinaryType.VARBINARY)
             .put(new Symbol("unbound_double"), DOUBLE)
             .put(new Symbol("unbound_boolean"), BOOLEAN)
             .put(new Symbol("unbound_date"), DATE)
@@ -115,6 +119,8 @@ public class TestExpressionInterpreter
         assertOptimizedEquals("false and unbound_string='z'", "false");
 
         assertOptimizedEquals("bound_string='z' and bound_long=1+1", "bound_string='z' and bound_long=2");
+
+        assertOptimizedEquals("bound_binary_literal =x'0a 0b 0c' and bound_long=1+1", "bound_string='z' and bound_long=2");
     }
 
     @Test
@@ -139,6 +145,8 @@ public class TestExpressionInterpreter
         assertOptimizedEquals("false or bound_string='z'", "bound_string='z'");
 
         assertOptimizedEquals("bound_string='z' or bound_long=1+1", "bound_string='z' or bound_long=2");
+
+        assertOptimizedEquals("bound_binary_literal =x'00' or bound_long=1+1", "bound_string='z' or bound_long=2");
     }
 
     @Test
@@ -158,6 +166,9 @@ public class TestExpressionInterpreter
         assertOptimizedEquals("bound_long = unbound_long", "1234 = unbound_long");
 
         assertOptimizedEquals("10151082135029368 = 10151082135029369", "false");
+
+        assertOptimizedEquals("bound_binary_literal = X '0a 0b 0c' ", "true");
+        assertOptimizedEquals("bound_binary_literal = X '0a 0b 0d' ", "false");
     }
 
     @Test
@@ -172,6 +183,7 @@ public class TestExpressionInterpreter
         assertOptimizedEquals("null is distinct from 3", "true");
 
         assertOptimizedEquals("10151082135029368 is distinct from 10151082135029369", "true");
+        assertOptimizedEquals(" X '01 02 ' is distinct from X '03 02'", "true");
     }
 
     @Test
@@ -186,6 +198,7 @@ public class TestExpressionInterpreter
         assertOptimizedEquals("null+1 is null", "true");
         assertOptimizedEquals("unbound_string is null", "unbound_string is null");
         assertOptimizedEquals("unbound_long+(1+1) is null", "unbound_long+2 is null");
+        assertOptimizedEquals(" bound_binary_literal is null", "false");
     }
 
     @Test
@@ -200,6 +213,7 @@ public class TestExpressionInterpreter
         assertOptimizedEquals("null+1 is not null", "false");
         assertOptimizedEquals("unbound_string is not null", "unbound_string is not null");
         assertOptimizedEquals("unbound_long+(1+1) is not null", "unbound_long+2 is not null");
+        assertOptimizedEquals("bound_binary_literal is not null", "true");
     }
 
     @Test
@@ -227,6 +241,8 @@ public class TestExpressionInterpreter
         assertOptimizedEquals("nullif(unbound_long, 1)", "nullif(unbound_long, 1)");
         assertOptimizedEquals("nullif(unbound_long, unbound_long2)", "nullif(unbound_long, unbound_long2)");
         assertOptimizedEquals("nullif(unbound_long, unbound_long2+(1+1))", "nullif(unbound_long, unbound_long2+2)");
+        assertOptimizedEquals("nullif(bound_binary_literal, bound_binary_literal)", "null");
+        assertOptimizedEquals("nullif(bound_binary_literal, X '01')", "bound_binary_literal");
     }
 
     @Test
@@ -251,6 +267,7 @@ public class TestExpressionInterpreter
         assertOptimizedEquals("not 1!=1", "true");
         assertOptimizedEquals("not unbound_long=1", "not unbound_long=1");
         assertOptimizedEquals("not unbound_long=(1+1)", "not unbound_long=2");
+        assertOptimizedEquals("not bound_binary_literal=X '0a'", "true");
     }
 
     @Test
@@ -302,6 +319,8 @@ public class TestExpressionInterpreter
 
         assertOptimizedEquals("bound_long between unbound_long and 2000 + 1", "1234 between unbound_long and 2001");
         assertOptimizedEquals("bound_string between unbound_string and 'bar'", "'hello' between unbound_string and 'bar'");
+        assertOptimizedEquals("bound_binary_literal between bound_binary_literal and bound_binary_literal", "true");
+        assertOptimizedEquals("X '01 02 ' between X '01 01' and X '01 03'", "true");
     }
 
     @Test
@@ -373,6 +392,8 @@ public class TestExpressionInterpreter
 
         assertOptimizedEquals("bound_long in (2, 4, unbound_long, unbound_long2, 9)", "1234 in (unbound_long, unbound_long2)");
         assertOptimizedEquals("unbound_long in (2, 4, bound_long, unbound_long2, 5)", "unbound_long in (2, 4, 1234, unbound_long2, 5)");
+
+        assertOptimizedEquals("bound_binary_literal in (X '0a 0b 0c', X '00 ')", "true");
     }
 
     @Test
@@ -578,6 +599,13 @@ public class TestExpressionInterpreter
                         "when unbound_long = 1234 then 33 " +
                         "else 1 " +
                         "end");
+
+        assertOptimizedEquals("case " +
+                "when bound_binary_literal = X '0a 0b 0c' then 1 " +
+                "else 2 " +
+                "end",
+                "1"
+        );
 
         assertOptimizedMatches("case when 0 / 0 = 0 then 1 end",
                 "case when cast(fail() as boolean) then 1 end");
@@ -1035,6 +1063,8 @@ public class TestExpressionInterpreter
                         return Slices.wrappedBuffer("%el%".getBytes(UTF_8));
                     case "bound_timestamp_with_timezone":
                         return new SqlTimestampWithTimeZone(new DateTime(1970, 1, 1, 1, 0, 0, 999, DateTimeZone.UTC).getMillis(), getTimeZoneKey("Z"));
+                    case "bound_binary_literal":
+                        return new BinaryLiteral("0a 0b 0c").getSlice();
                 }
 
                 return new QualifiedNameReference(symbol.toQualifiedName());
