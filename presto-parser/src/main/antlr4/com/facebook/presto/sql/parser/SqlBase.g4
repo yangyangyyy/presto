@@ -521,10 +521,10 @@ STRING
     ;
 
 BINARY_LITERAL
-    :  'X' WS* '\'' WS* HEXIT WS* HEXIT WS* (HEXIT WS* HEXIT WS*)* '\''
+    :  'X' WS* '\'' WS* HEX_DIGIT WS* HEX_DIGIT WS* (HEX_DIGIT WS* HEX_DIGIT WS*)* '\''
     ;
 
-fragment HEXIT
+fragment HEX_DIGIT
     : [0-9A-F]
     ;
 
