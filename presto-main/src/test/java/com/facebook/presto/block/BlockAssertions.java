@@ -100,7 +100,7 @@ public final class BlockAssertions
         return builder.build();
     }
 
-    public static Block createBinaryLiteralsBlock(String ...values)
+    public static Block createBinaryLiteralsBlock(String... values)
     {
         requireNonNull(values, "varargs 'values' is null");
 
