@@ -243,6 +243,18 @@ public class TestMemoryManager
         }
     }
 
+    @Test(timeOut = 240_000, expectedExceptions = RuntimeException.class, expectedExceptionsMessageRegExp = ".*Query exceeded max memory size of 1kB.*")
+    public void testQueryCpuLimit()
+            throws Exception
+    {
+        Map<String, String> properties = ImmutableMap.<String, String>builder()
+                .put("query.max-memory", "1kB")
+                .put("task.operator-pre-allocated-memory", "0B")
+                .build();
+        try (QueryRunner queryRunner = createQueryRunner(SESSION, properties)) {
+            queryRunner.execute(SESSION, "SELECT COUNT(*), clerk FROM orders GROUP BY clerk");
+        }
+    }
     @Test(timeOut = 240_000, expectedExceptions = RuntimeException.class, expectedExceptionsMessageRegExp = ".*Query exceeded local memory limit of 1kB.*")
     public void testQueryMemoryPerNodeLimit()
             throws Exception
