@@ -293,6 +293,7 @@ intervalField
 type
     : type ARRAY
     | ARRAY '<' type '>'
+    | MULTISET '<' type '>'
     | MAP '<' type ',' type '>'
     | simpleType
     ;
@@ -506,6 +507,7 @@ RENAME: 'RENAME';
 UNNEST: 'UNNEST';
 ORDINALITY: 'ORDINALITY';
 ARRAY: 'ARRAY';
+MULTISET: 'MULTISET';
 MAP: 'MAP';
 SET: 'SET';
 RESET: 'RESET';

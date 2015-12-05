@@ -1395,6 +1395,10 @@ class AstBuilder
             return "MAP<" + getType(type.type(0)) + "," + getType(type.type(1)) + ">";
         }
 
+        if (type.MULTISET() != null) {
+            return "MULTISET<" + getType(type.type(0)) + ">";
+        }
+
         throw new IllegalArgumentException("Unsupported type specification: " + type.getText());
     }
 

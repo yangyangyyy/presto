@@ -46,6 +46,7 @@ import com.facebook.presto.operator.scalar.HyperLogLogFunctions;
 import com.facebook.presto.operator.scalar.JsonFunctions;
 import com.facebook.presto.operator.scalar.JsonOperators;
 import com.facebook.presto.operator.scalar.MathFunctions;
+import com.facebook.presto.operator.scalar.MultisetToArrayCast;
 import com.facebook.presto.operator.scalar.RegexpFunctions;
 import com.facebook.presto.operator.scalar.ScalarFunctionImplementation;
 import com.facebook.presto.operator.scalar.StringFunctions;
@@ -167,6 +168,7 @@ import static com.facebook.presto.operator.scalar.ArraySubscriptOperator.ARRAY_S
 import static com.facebook.presto.operator.scalar.ArrayToArrayCast.ARRAY_TO_ARRAY_CAST;
 import static com.facebook.presto.operator.scalar.ArrayToElementConcatFunction.ARRAY_TO_ELEMENT_CONCAT_FUNCTION;
 import static com.facebook.presto.operator.scalar.ArrayToJsonCast.ARRAY_TO_JSON;
+import static com.facebook.presto.operator.scalar.ArrayToMultisetCast.ARRAY_TO_MULTISET_CAST;
 import static com.facebook.presto.operator.scalar.ConcatFunction.CONCAT;
 import static com.facebook.presto.operator.scalar.ElementToArrayConcatFunction.ELEMENT_TO_ARRAY_CONCAT_FUNCTION;
 import static com.facebook.presto.operator.scalar.Greatest.GREATEST;
@@ -350,11 +352,12 @@ public class FunctionRegistry
                 .function(IDENTITY_CAST)
                 .functions(ARRAY_CONTAINS, ARRAY_JOIN, ARRAY_JOIN_WITH_NULL_REPLACEMENT)
                 .functions(ARRAY_MIN, ARRAY_MAX)
-                .functions(ARRAY_TO_ARRAY_CAST, ARRAY_HASH_CODE, ARRAY_EQUAL, ARRAY_NOT_EQUAL, ARRAY_LESS_THAN, ARRAY_LESS_THAN_OR_EQUAL, ARRAY_GREATER_THAN, ARRAY_GREATER_THAN_OR_EQUAL)
+                .functions(ARRAY_TO_ARRAY_CAST, ARRAY_TO_MULTISET_CAST, ARRAY_HASH_CODE, ARRAY_EQUAL, ARRAY_NOT_EQUAL, ARRAY_LESS_THAN, ARRAY_LESS_THAN_OR_EQUAL, ARRAY_GREATER_THAN, ARRAY_GREATER_THAN_OR_EQUAL)
                 .functions(ARRAY_CONCAT_FUNCTION, ARRAY_TO_ELEMENT_CONCAT_FUNCTION, ELEMENT_TO_ARRAY_CONCAT_FUNCTION)
                 .functions(MAP_EQUAL, MAP_NOT_EQUAL, MAP_HASH_CODE)
                 .functions(ARRAY_CONSTRUCTOR, ARRAY_SUBSCRIPT, ARRAY_ELEMENT_AT_FUNCTION, ARRAY_CARDINALITY, ARRAY_POSITION, ARRAY_SORT_FUNCTION, ARRAY_INTERSECT_FUNCTION, ARRAY_TO_JSON, JSON_TO_ARRAY, ARRAY_DISTINCT_FUNCTION, ARRAY_REMOVE_FUNCTION, ARRAY_SLICE_FUNCTION)
                 .functions(MAP_CONSTRUCTOR, MAP_CARDINALITY, MAP_SUBSCRIPT, MAP_TO_JSON, JSON_TO_MAP, MAP_KEYS, MAP_VALUES)
+                .functions(MultisetToArrayCast.MULTISET_TO_ARRAY_CAST)
                 .functions(MAP_AGG, MULTIMAP_AGG)
                 .function(HISTOGRAM)
                 .function(CHECKSUM_AGGREGATION)

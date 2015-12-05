@@ -106,6 +106,13 @@ public class TestArrayOperators
     }
 
     @Test
+    public void testArrayCast()
+            throws Exception
+    {
+        assertFunction("CAST(CAST(array[1,2,3] AS multiset<bigint>) AS array<bigint>)", new ArrayType(BIGINT), ImmutableList.of(1L, 2L, 3L));
+    }
+
+    @Test
     public void testArrayToJson()
             throws Exception
     {

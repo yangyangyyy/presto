@@ -238,6 +238,7 @@ public class TestSqlParser
         assertCast("boolean array  array ARRAY", "ARRAY<ARRAY<ARRAY<boolean>>>");
         assertCast("boolean ARRAY ARRAY ARRAY", "ARRAY<ARRAY<ARRAY<boolean>>>");
         assertCast("ARRAY<boolean> ARRAY ARRAY", "ARRAY<ARRAY<ARRAY<boolean>>>");
+        assertCast("Multiset<bigint>", "multiset<bigint>");
     }
 
     @Test
