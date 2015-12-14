@@ -521,7 +521,7 @@ STRING
     ;
 
 BINARY_LITERAL
-    :  'X' WS* '\'' WS* HEX_DIGIT WS* HEX_DIGIT WS* (HEX_DIGIT WS* HEX_DIGIT WS*)* '\''
+    :  'X\''  WS* (HEX_DIGIT WS* HEX_DIGIT WS*)* '\''
     ;
 
 fragment HEX_DIGIT

@@ -13,13 +13,13 @@
  */
 package com.facebook.presto.sql.tree;
 
-import com.facebook.presto.sql.tree.treeutil.BinaryLiteralUtil;
+import com.facebook.presto.sql.parser.ParsingException;
+import com.google.common.io.BaseEncoding;
 import io.airlift.slice.Slice;
 import io.airlift.slice.Slices;
 
 import java.util.Optional;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
 
 public class BinaryLiteral
@@ -37,8 +37,12 @@ public class BinaryLiteral
     {
         super(location);
         requireNonNull(value, "value is null");
-        this.value = value.replaceAll("[^a-fA-F0-9]", "");
-        this.slice = BinaryLiteralUtil.fromHexVarchar(Slices.wrappedBuffer(this.value.getBytes(UTF_8)));
+        // the grammar could possibly include White Space in the value it passes to us
+        this.value = value.replaceAll("[ \\r\\n\\t]", "").toUpperCase();
+        if (this.value.matches(".*[^A-F0-9].*")) {
+            throw new ParsingException("Invalid binary literal:[" + value + "]");
+        }
+        this.slice = Slices.wrappedBuffer(BaseEncoding.base16().decode(this.value));
     }
 
     public BinaryLiteral(NodeLocation location, String value)

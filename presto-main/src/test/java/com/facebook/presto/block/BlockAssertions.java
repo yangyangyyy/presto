@@ -18,8 +18,8 @@ import com.facebook.presto.spi.block.BlockBuilder;
 import com.facebook.presto.spi.block.BlockBuilderStatus;
 import com.facebook.presto.spi.block.RunLengthEncodedBlock;
 import com.facebook.presto.spi.type.Type;
-import com.facebook.presto.sql.tree.BinaryLiteral;
 import com.facebook.presto.type.ArrayType;
+import io.airlift.slice.Slice;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -100,18 +100,22 @@ public final class BlockAssertions
         return builder.build();
     }
 
-    public static Block createBinaryLiteralsBlock(String... values)
+    public static Block createSlicesBlock(Slice... values)
     {
         requireNonNull(values, "varargs 'values' is null");
+        return createSlicesBlock(Arrays.asList(values));
+    }
 
+    public static Block createSlicesBlock(Iterable<Slice> values)
+    {
         BlockBuilder builder = VARBINARY.createBlockBuilder(new BlockBuilderStatus(), 100);
 
-        for (String value : values) {
+        for (Slice value : values) {
             if (value == null) {
                 builder.appendNull();
             }
             else {
-                VARBINARY.writeSlice(builder, new BinaryLiteral(value).getSlice());
+                VARBINARY.writeSlice(builder, value);
             }
         }
 

@@ -145,7 +145,15 @@ public class TestSqlParser
     public void testBinaryLiteral()
         throws Exception
     {
-        assertExpression("x 'a  b'", new BinaryLiteral("ab"));
+        assertExpression("x' '", new BinaryLiteral(""));
+        assertExpression("x''", new BinaryLiteral(""));
+
+        // forms such as "X 'a b' " may look like BinaryLiteral
+        // but they do not pass the syntax rule for BinaryLiteral
+        // but instead conform to TypeConstructor, which generates a GenericLiteral expression
+        assertExpression("X 'a b'", new GenericLiteral("X", "a b"));
+        assertExpression("X'a b c'", new GenericLiteral("X", "a b c"));
+        assertExpression("X'a z'", new GenericLiteral("X", "a z"));
     }
 
     public static void assertGenericLiteral(String type)
@@ -1087,6 +1095,17 @@ public class TestSqlParser
                     indent(input),
                     indent(formatSql(expected)),
                     indent(formatSql(parsed))));
+        }
+    }
+
+    private static void assertInvalidExpression(String expression, String expectedErrorMsg)
+    {
+        try {
+            Expression result = SQL_PARSER.createExpression(expression);
+            fail(format("Expected to throw ParsingException for input:[" + expression + "], but got:" + result));
+        }
+        catch (ParsingException e) {
+            assertEquals(e.getErrorMessage(), expectedErrorMsg);
         }
     }
 

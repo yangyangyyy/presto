@@ -80,8 +80,6 @@ public class TestStatementBuilder
                 ", sum(salary) over (rows between 2 preceding and unbounded following)\n" +
                 "from emp");
 
-        printStatement(" select * from foo where x in (X '0a 0b', 'asfasdf' ) ");
-
         printStatement("" +
                 "with a (id) as (with x as (select 123 from z) select * from x) " +
                 "   , b (id) as (select 999 from z) " +

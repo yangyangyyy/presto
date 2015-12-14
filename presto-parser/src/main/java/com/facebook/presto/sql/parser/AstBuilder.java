@@ -1042,7 +1042,11 @@ class AstBuilder
     @Override
     public Node visitBinaryLiteral(SqlBaseParser.BinaryLiteralContext context)
     {
-        return new BinaryLiteral(unquote(context.BINARY_LITERAL().getText()));
+        String raw = context.BINARY_LITERAL().getText();
+        if (raw.charAt(0) != 'X' && raw.charAt(0) != 'x') {
+            throw new ParsingException("BinaryLiteral should all start with 'X', but saw:" + raw);
+        }
+        return new BinaryLiteral(unquote(raw.substring(1)));
     }
 
     @Override
